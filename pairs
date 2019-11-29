@@ -1,0 +1,10 @@
+select DISTINCT A.name AS namea, B.name AS nameb from (
+select distinct yrb_purchase.cid, yrb_purchase.title, yrb_purchase.year, yrb_customer.name from 
+yrb_purchase, yrb_customer 
+Where yrb_purchase.cid = yrb_customer.cid) A, (
+select distinct yrb_purchase.cid, yrb_purchase.title, yrb_purchase.year, yrb_customer.name from 
+yrb_purchase, yrb_customer 
+Where yrb_purchase.cid = yrb_customer.cid) B
+where A.title = B.title
+AND A.year = B.year
+AND A.cid > B.cid;

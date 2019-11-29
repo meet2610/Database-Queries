@@ -1,0 +1,41 @@
+select Name, Category, Cost from (
+select A3.id AS ID, A3.name1 AS check, A3.cat1, A3.cost1, A4.ID as cid, A4.name AS Name, A4.category AS Category, A4.cost as COST from (
+select A1.id AS ID, A1.Name AS name1, A1.Category AS cat1, A1.COST AS cost1, A2.Name AS name2, A2.Category AS cat2, A2.COST AS cost2 from(
+select ID, Name, Category, SUM(Price) AS COST from (
+select P.cid AS ID, C.name AS Name, B.cat AS Category, O.price AS Price from
+yrb_purchase P, yrb_offer O, yrb_customer C, yrb_book B 
+where P.cid = C.cid 
+AND P.title = B.title
+AND P.year = B.year
+AND P.club = O.club 
+AND P.year = O.year 
+AND P.title = O.title)
+Group by ID, Name, Category) A1,(
+select ID, Name, Category, SUM(Price) AS COST from (
+select P.cid AS ID, C.name AS Name, B.cat AS Category, O.price AS Price from
+yrb_purchase P, yrb_offer O, yrb_customer C, yrb_book B 
+where P.cid = C.cid 
+AND P.title = B.title
+AND P.year = B.year
+AND P.club = O.club 
+AND P.year = O.year 
+AND P.title = O.title)
+Group by ID, Name, Category) A2
+WHERE A1.id = A2.id
+AND A1.category <> A2.category
+AND A1.cost < A2.cost) A3
+RIGHT JOIN (
+select ID, Name, Category, SUM(Price) AS COST from (
+select P.cid AS ID, C.name AS Name, B.cat AS Category, O.price AS Price from
+yrb_purchase P, yrb_offer O, yrb_customer C, yrb_book B 
+where P.cid = C.cid 
+AND P.title = B.title
+AND P.year = B.year
+AND P.club = O.club 
+AND P.year = O.year 
+AND P.title = O.title)
+Group by ID, Name, Category) A4
+ON A4.id = A3.id
+AND A4.category = A3.cat1)
+where check is null
+Order by cid ASC;

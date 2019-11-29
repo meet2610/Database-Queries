@@ -1,0 +1,11 @@
+select Name, Category, COST from (
+select ID, Name, Category, SUM(Price) AS COST from (
+select P.cid AS ID, C.name AS Name, B.cat AS Category, O.price AS Price from
+yrb_purchase P, yrb_offer O, yrb_customer C, yrb_book B 
+where P.cid = C.cid 
+AND P.title = B.title
+AND P.year = B.year
+AND P.club = O.club 
+AND P.year = O.year 
+AND P.title = O.title)
+Group by ID, Name, Category);

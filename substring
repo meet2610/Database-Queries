@@ -1,0 +1,4 @@
+Select yrb_book.title,yrb_book.year, yrb_book.cat as category
+From yrb_book 
+where LOWER(yrb_book.title) LIKE '%' || LOWER(yrb_book.cat) || '%';
+

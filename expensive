@@ -1,0 +1,27 @@
+select yrb_offer.title, yrb_offer.year, yrb_offer.price from yrb_offer, (
+select (SUM(price)/COUNT(*)) AS avg from (
+select O.club AS club, O.title AS title, O.year AS year, O.price AS price from (
+select E1.club AS club, E1.title AS title, E1.year AS year, E1.price AS price from (
+select yrb_offer.club AS club, yrb_offer.title AS title, yrb_offer.year AS year, yrb_offer.price as price
+from yrb_offer, yrb_book 
+where yrb_offer.title = yrb_book.title 
+AND yrb_offer.year = yrb_book.year
+AND LOWER(yrb_book.language) = 'english') E1, 
+(select yrb_offer.club AS club, yrb_offer.title AS title, yrb_offer.year AS year, yrb_offer.price as price
+from yrb_offer, yrb_book 
+where yrb_offer.title = yrb_book.title 
+AND yrb_offer.year = yrb_book.year
+AND LOWER(yrb_book.language) = 'english') O
+where E1.club = O.club 
+AND E1.price < O.price) C1 RIGHT JOIN 
+(select yrb_offer.club AS club, yrb_offer.title AS title, yrb_offer.year AS year, yrb_offer.price as price
+from yrb_offer, yrb_book 
+where yrb_offer.title = yrb_book.title 
+AND yrb_offer.year = yrb_book.year
+AND LOWER(yrb_book.language) = 'english'
+) O ON 
+C1.club = O.club AND C1.title = O.title AND C1.year = O.year AND C1.price = O.price
+where C1.club is Null) )
+where yrb_offer.price > avg;
+
+

@@ -1,0 +1,6 @@
+select * from (select COUNT(*) AS #Basic 
+from yrb_member 
+where yrb_member.club = 'Basic'),
+(select COUNT(*) AS #AAA 
+from yrb_member 
+where yrb_member.club = 'AAA');

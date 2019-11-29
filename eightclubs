@@ -1,0 +1,5 @@
+select book, year from(
+select  O.title AS book, O.year AS year, count(*) AS count
+from yrb_offer O 
+group by O.title, O.year)
+where count = 8;

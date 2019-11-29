@@ -1,0 +1,4 @@
+select yrb_member.club, count(*) as count
+from yrb_member
+group by yrb_member.club
+having count(*) <= (select min(count) as count from (select count(*) as count from yrb_member group by yrb_member.club)); 

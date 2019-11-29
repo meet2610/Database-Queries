@@ -1,0 +1,17 @@
+select cid, CAST(date AS date) as Date, (cost + Scost) as Cost from (
+select A1.cid AS cid, A1.date AS date, A1.cost AS cost, A1.weight AS weight, A1.Sweight as Sweight, yrb_shipping.cost as Scost from(
+select Z.cid AS cid, Z.date AS date, Z.cost AS cost, Z.weight AS weight, min(Z.Sweight) as Sweight from (
+select B.cid AS cid, B.date AS date, B.cost AS cost, B.weight AS weight, yrb_shipping.weight AS Sweight, yrb_shipping.cost AS Scost from (
+select A.cid AS cid, A.w AS date, SUM(A.cost) AS cost, SUM(A.weight) AS weight from (
+select P.cid AS cid, P.when AS W, (P.qnty * O.price) AS cost, (P.qnty * B.weight) AS weight
+from yrb_purchase P, yrb_offer O, yrb_book B
+where P.title = O.title
+AND P.club = O.club
+AND P.year = O.year 
+AND P.title = B.title
+AND P.year = B.year) A
+group by A.cid, A.W) B, yrb_shipping 
+where yrb_shipping.weight >= B.weight) Z
+group by cid, date, cost, weight) A1, yrb_shipping
+where A1.Sweight = yrb_shipping.weight)
+Order by cid;

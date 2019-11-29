@@ -1,0 +1,8 @@
+select DISTINCT A2.cid, customer.name from (
+select A1.cid2 AS CID, A1.club2 AS CLUB from ( 
+select pur.cid AS cid1, mem.cid AS cid2, mem.club AS club2
+from yrb_purchase pur 
+RIGHT JOIN yrb_member mem 
+ON pur.cid = mem.cid AND pur.club = mem.club) A1
+where A1.cid1 is NULL) A2, yrb_customer customer 
+where A2.cid = customer.cid; 
